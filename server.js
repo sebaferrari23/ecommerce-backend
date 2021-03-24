@@ -1,53 +1,54 @@
 const express = require('express') 
-const multer = require('multer')
 const app = express()
 const port = 8080
 const router = express.Router()
+const handlebars  = require('express-handlebars')
 
-var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, '')
-    }, 
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now())
-    }
-})
-var upload = multer({ storage: storage })
+app.engine('hbs', handlebars({
+    extname: '.hbs',
+    defaultLayout: 'index.hbs',
+    layoutsDir: __dirname + '/views/layouts',
+    partialsDir: __dirname + '/views/partials/'
+}));
+app.set('view engine', 'hbs')
+app.set('views', './views')
+app.set(express.static('public'))
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 let error = {}
-let products = [
-    {
-        title: 'Product 1',
-        price: '122.99',
-        thumbnail: 'foto-1.png',
-        id: 1
-    },
-    {
-        title: 'Product 2',
-        price: '78.99',
-        thumbnail: 'foto-2.png',
-        id: 2
-    },
-    {
-        title: 'Product 3',
-        price: '256.99',
-        thumbnail: 'foto-3.png',
-        id: 3
-    }
-]
+
+getProducts = () => {
+    return [
+        {
+            title: 'Banana',
+            price: '12.99',
+            thumbnailUrl: 'https://cdn2.iconfinder.com/data/icons/fruits-66/50/Fruits_Outline-10-128.png',
+            id: 1
+        },
+        {
+            title: 'Apple',
+            price: '8.99',
+            thumbnailUrl: 'https://cdn2.iconfinder.com/data/icons/fruits-66/50/Fruits_Outline-12-128.png',
+            id: 2
+        },
+        {
+            title: 'Orange',
+            price: '16.99',
+            thumbnailUrl: 'https://cdn2.iconfinder.com/data/icons/fruits-66/50/Fruits_Outline-09-128.png',
+            id: 3
+        }
+    ];
+}
+
+let products = getProducts();
+
 let product = {
     title: '',
     price: '',
-    thumbnail: ''
+    thumbnailUrl: ''
 };
-
-// Form
-app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
-})
 
 // Get products
 router.get('/productos/listar', (req, res) => {
@@ -74,18 +75,12 @@ router.get('/productos/listar/:id', (req, res) => {
 })
 
 // Save product
-router.post('/productos/guardar', upload.single('thumbnail'), (req, res, next) => {
-    const file = req.file
-    if(!file) {
-        const error = new Error('Please upload a file')
-        error.httpStatusCode = 400
-        return next(error)
-    }
-    if(req.body.title && req.body.price && file) {
+router.post('/productos/guardar', (req, res) => {
+    if(req.body.title && req.body.price && req.body.thumbnailUrl) {
         product = {
             title: req.body.title,
             price: req.body.price,
-            thumbnail: file.originalname,
+            thumbnailUrl: req.body.thumbnailUrl,
             id: products.length + 1
         };
         products.push(product)
@@ -95,21 +90,21 @@ router.post('/productos/guardar', upload.single('thumbnail'), (req, res, next) =
         }
         return res.json(error);
     }
-    res.send(product);
+    res.render('form');
 })
 
 // Update product
 router.put('/productos/actualizar/:id', (req, res) => {
     const productId = parseFloat(req.params.id)
 
-    if(req.body.title && req.body.price && req.body.thumbnail) {
+    if(req.body.title && req.body.price && req.body.thumbnailUrl) {
         products = products.map(product => 
             product.id === productId ?
             { 
                 ...product, 
                 title: req.body.title,
                 price: req.body.price,
-                thumbnail: req.body.thumbnail
+                thumbnailUrl: req.body.thumbnailUrl
             } : product
         )
         var productUpdate = products.filter(product => product.id === productId)
@@ -129,7 +124,7 @@ router.put('/productos/actualizar/:id', (req, res) => {
 })
 
 // Delete product
-router.delete('/productos/actualizar/:id', (req, res) => {
+router.delete('/productos/borrar/:id', (req, res) => {
     const productId = parseFloat(req.params.id)
     const productItem = products.findIndex(({ id }) => id === productId);
     if (productItem >= 0) {
@@ -141,6 +136,16 @@ router.delete('/productos/actualizar/:id', (req, res) => {
         return res.json(error);
     }
     res.json(products)
+})
+
+// Form
+app.get('/', (req, res) => {
+    res.render('form');
+})
+
+// Products view
+app.get('/productos/vista', (req, res) => {
+    res.render('products', {products: products, productsExists: true});
 })
 
 app.use('/api', router)

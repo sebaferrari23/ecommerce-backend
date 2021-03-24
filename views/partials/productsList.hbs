@@ -1,0 +1,24 @@
+{{#if products.length}}
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>Name</th>
+      <th>Price</th>
+      <th class="text-right">Image</th>
+    </tr>
+  </thead>
+  <tbody>
+      {{#each products}}
+        <tr>
+          <td><strong>{{this.title}}</strong></td>
+          <td>${{this.price}}</td>
+          <td class="text-right"><img src="{{this.thumbnailUrl}}" alt="{{this.title}}" style="max-width:30px;"></td>
+        </tr>
+      {{/each}}
+  </tbody>
+</table>
+<a href="/" class="btn btn-primary">Agregar productos</a>
+{{else}}
+<h6>No hay productos</h6>
+<a href="/" class="btn btn-primary">Agregar productos</a>
+{{/if}}
