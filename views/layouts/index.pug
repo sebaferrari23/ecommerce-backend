@@ -1,0 +1,21 @@
+doctype html
+html
+head
+    title Express Pug
+    meta(charset='UTF-8')
+    meta(http-equiv="X-UA-Compatible" content="IE=edge")
+    meta(http-equiv="X-UA-Compatible" content="IE=edge")
+    meta(name="viewport" content="width=device-width, initial-scale=1.0")
+    link(href='https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css' rel="stylesheet" crossorigin="anonymous")
+
+    body
+        nav.navbar.navbar-dark.bg-dark
+            a(href="/" class="navbar-brand") Express-handlebars
+            ul.navbar-nav.flex-row.ml-auto
+                li.nav-item.mr-4
+                    a(href="/" class="nav-link") Upload products
+                li.nav-item
+                    a(href="/productos/vista" class="nav-link") Products
+
+        div.container.pt-5
+            block content

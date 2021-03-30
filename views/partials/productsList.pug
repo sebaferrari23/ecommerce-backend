@@ -1,0 +1,21 @@
+if products.length > 0
+  table.table.table-striped
+    thead.thead-dark 
+      tr 
+        th Name 
+        th Price 
+        th.text-right Image 
+    tbody 
+      each product in products
+        tr 
+          td 
+            strong= product.title
+          td= product.price 
+          td.text-right 
+            img(src=product.thumbnailUrl alt"" style="max-width:30px;")
+
+  a(href="/" class="btn btn-primary") Agregar productos
+else 
+  h6 No hay productos
+  a(href="/" class="btn btn-primary") Agregar productos
+      
