@@ -1,5 +1,7 @@
 const express = require('express') 
 const app = express()
+const http = require('http').Server(app)
+const io = require('socket.io')(http)
 const port = 8080
 const router = express.Router()
 const handlebars  = require('express-handlebars')
@@ -90,7 +92,7 @@ router.post('/productos/guardar', (req, res) => {
         }
         return res.json(error);
     }
-    res.render('form');
+    res.render('index', {products: products, productsExists: true});
 })
 
 // Update product
@@ -138,19 +140,28 @@ router.delete('/productos/borrar/:id', (req, res) => {
     res.json(products)
 })
 
-// Form
+// Index
 app.get('/', (req, res) => {
-    res.render('form');
-})
-
-// Products view
-app.get('/productos/vista', (req, res) => {
-    res.render('products', {products: products, productsExists: true});
+    res.render('index', {products: products, productsExists: true});
 })
 
 app.use('/api', router)
 
-const server = app.listen(port, () => {
+io.on('connection', (socket) => {
+    socket.on('new product', (product) => {
+      io.emit('new product', product);
+      newProduct = {
+          title: product.title,
+          price: product.price,
+          thumbnailUrl: product.thumbnailUrl,
+          id: products.length + 1
+      };
+      products.push(newProduct)
+      console.log(newProduct);
+    });
+})
+
+const server = http.listen(port, () => {
     console.log(`Servidor inicializado en puerto ${server.address().port}`)
 })
 server.on('error', error => console.log(`Error en el servidor ${error}`))

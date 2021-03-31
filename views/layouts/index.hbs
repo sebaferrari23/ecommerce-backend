@@ -9,18 +9,44 @@
 <body>
     <nav class="navbar navbar-dark bg-dark">
         <a class="navbar-brand" href="/">Express-handlebars</a>
-        <ul class="navbar-nav flex-row ml-auto">
-            <li class="nav-item mr-4">
-                <a class="nav-link" href="/">Upload products</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/productos/vista">Products</a>
-            </li>
-        </ul>
     </nav>
 
     <div class="container pt-5">
         {{{ body }}}
     </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+    var socket = io();
+    
+    var productsTable = document.getElementById('products');
+    var form = document.getElementById('form');
+    var title = document.getElementById('title');
+    var price = document.getElementById('price');
+    var thumb = document.getElementById('thumb');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        if(title.value || price.value || thumb.value) {
+            var product = {
+                title: title.value, 
+                price: price.value, 
+                thumbnailUrl: thumb.value
+            }
+            socket.emit('new product', product);
+            title.value = '';
+            price.value = '';
+            thumb.value = '';
+        } 
+    });
+
+    socket.on('new product', function(product) {
+        console.log(product)
+        var productItem = document.createElement('tr');
+        productItem.innerHTML = `<td><strong>${product.title}</strong></td>` +
+            `<td>${product.price}</td>` +
+            `<td class="text-right"><img src="${product.thumbnailUrl}" alt="${product.title}" style="max-width:30px;"></td>`;
+        productsTable.appendChild(productItem);
+    });
+    </script>
 </body>
 </html>
