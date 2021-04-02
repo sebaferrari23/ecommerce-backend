@@ -5,6 +5,7 @@ const io = require('socket.io')(http)
 const port = 8080
 const router = express.Router()
 const handlebars  = require('express-handlebars')
+const fs = require('fs');
 
 app.engine('hbs', handlebars({
     extname: '.hbs',
@@ -45,6 +46,8 @@ getProducts = () => {
 }
 
 let products = getProducts();
+
+let messages = []
 
 let product = {
     title: '',
@@ -148,17 +151,35 @@ app.get('/', (req, res) => {
 app.use('/api', router)
 
 io.on('connection', (socket) => {
+    // New product
     socket.on('new product', (product) => {
-      io.emit('new product', product);
-      newProduct = {
-          title: product.title,
-          price: product.price,
-          thumbnailUrl: product.thumbnailUrl,
-          id: products.length + 1
-      };
-      products.push(newProduct)
-      console.log(newProduct);
+		io.emit('new product', product);
+		newProduct = {
+			title: product.title,
+			price: product.price,
+			thumbnailUrl: product.thumbnailUrl,
+			id: products.length + 1
+		};
+		products.push(newProduct)
+		console.log(newProduct);
     });
+
+	// New message
+	socket.on('new message', async (message) => {
+		io.emit('new message', message);
+		newMessage = {
+			email: message.email, 
+			timestamp: message.timestamp, 
+			text: message.text, 
+		};
+		messages.push(newMessage)
+		console.log(newMessage);
+		try {
+			await fs.promises.writeFile('messages.txt', JSON.stringify(messages))
+		} catch(err) {
+			console.log('Error de escritura', err.errno)
+		}
+	});
 })
 
 const server = http.listen(port, () => {
