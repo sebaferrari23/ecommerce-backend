@@ -1,4 +1,4 @@
-const express = require('express') 
+const express = require('express');
 const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
@@ -15,14 +15,27 @@ app.engine('hbs', handlebars({
 }));
 app.set('view engine', 'hbs')
 app.set('views', './views')
-app.set(express.static('public'))
+//app.set(express.static('public'))
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
+
+interface Product {
+  title: string,
+  price: string,
+  thumbnailUrl: string,
+  id: number,
+}
+interface Message {
+  email: string, 
+  timestamp: string, 
+  text: string, 
+}
+
 let error = {}
 
-getProducts = () => {
+const getProducts = () => {
     return [
         {
             title: 'Banana',
@@ -47,12 +60,13 @@ getProducts = () => {
 
 let products = getProducts();
 
-let messages = []
+let messages: Array<Message> = []
 
-let product = {
+let product: Product = {
     title: '',
     price: '',
-    thumbnailUrl: ''
+    thumbnailUrl: '',
+    id: 0,
 };
 
 // Get products
@@ -152,8 +166,9 @@ app.use('/api', router)
 
 io.on('connection', (socket) => {
     // New product
-    socket.on('new product', (product) => {
+    socket.on('new product', (product: Product) => {
 		io.emit('new product', product);
+    let newProduct: Product;
 		newProduct = {
 			title: product.title,
 			price: product.price,
@@ -167,6 +182,7 @@ io.on('connection', (socket) => {
 	// New message
 	socket.on('new message', async (message) => {
 		io.emit('new message', message);
+    let newMessage: Message;
 		newMessage = {
 			email: message.email, 
 			timestamp: message.timestamp, 
