@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "timestamp": "1618947468",
+    "nombre": "Bananas",
+    "descripcion": "Lorem ipsum dolor",
+    "codigo": "001",
+    "foto": "https://cdn2.iconfinder.com/data/icons/fruits-66/50/Fruits_Outline-10-512.png",
+    "precio": "12.99",
+    "stock": "3"
+  },
+  {
+    "id": 2,
+    "timestamp": "1618947468",
+    "nombre": "Uvas",
+    "descripcion": "Consectetur adipiscing",
+    "codigo": "002",
+    "foto": "https://cdn2.iconfinder.com/data/icons/fruits-66/50/Fruits_Outline-07-512.png",
+    "precio": "22.99",
+    "stock": "20"
+  },
+  {
+    "id": 3,
+    "timestamp": "1618947468",
+    "nombre": "Naranjas",
+    "descripcion": "Tincidunt sed tortor",
+    "codigo": "003",
+    "foto": "https://cdn2.iconfinder.com/data/icons/fruits-66/50/Fruits_Outline-09-512.png",
+    "precio": "5.99",
+    "stock": "5"
+  }
+]
