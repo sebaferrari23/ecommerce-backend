@@ -1,0 +1,50 @@
+@charset "utf-8";
+
+// Import a Google Font
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&display=swap');
+
+// Set your brand colors
+$purple: #4f38a4;
+$white: #fff;
+
+// Update Bulma's global variables
+$family-sans-serif: "Poppins", sans-serif;
+$primary: $purple;
+$fullhd-enabled: false;
+$dark: #000;
+
+// Update some of Bulma's component variables
+$navbar-item-hover-background-color: transparent;
+$footer-padding: 3rem 1.5rem;
+$box-padding: 1.5rem;
+
+// Import Bulma
+@import "../../node_modules/bulma/sass/utilities/_all.sass";
+@import "../../node_modules/bulma/sass/base/_all.sass";
+@import "../../node_modules/bulma/sass/helpers/_all.sass";
+@import "../../node_modules/bulma/sass/grid/_all.sass";
+
+// Elements
+@import "../../node_modules/bulma/sass/elements/button.sass";
+@import "../../node_modules/bulma/sass/elements/icon.sass";
+@import "../../node_modules/bulma/sass/elements/container.sass";
+@import "../../node_modules/bulma/sass/elements/title.sass";
+@import "../../node_modules/bulma/sass/elements/table.sass";
+@import "../../node_modules/bulma/sass/elements/image.sass";
+@import "../../node_modules/bulma/sass/elements/box.sass";
+@import "../../node_modules/bulma/sass/elements/other.sass";
+
+@import "../../node_modules/bulma/sass/form/_all.sass";
+
+// Components
+@import "../../node_modules/bulma/sass/components/navbar.sass";
+@import "../../node_modules/bulma/sass/components/card.sass";
+@import "../../node_modules/bulma/sass/components/media.sass";
+
+// Layouts
+@import "../../node_modules/bulma/sass/layout/hero.sass";
+@import "../../node_modules/bulma/sass/layout/footer.sass";
+@import "../../node_modules/bulma/sass/layout/section.sass";
+
+// Customs scss
+@import "custom.scss";
